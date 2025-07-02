@@ -555,7 +555,7 @@ def chat():
         if not mensagem:
             return jsonify({
                 'erro': 'Mensagem vazia',
-                'resposta': 'Como posso ajudar você hoje?'
+                'resposta': 'Tem ideia de como a filosofia estoica pode te treinar ou quer que eu te ajude a ver isso?'
             }), 400
         
         # Tentar resposta instantânea primeiro
