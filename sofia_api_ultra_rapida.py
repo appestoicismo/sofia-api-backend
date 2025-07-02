@@ -21,14 +21,6 @@ class SofiaAPIUltraRapida:
         genai.configure(api_key=api_key)
         self.model = genai.GenerativeModel('gemini-1.5-flash')
         
-        # Cache para respostas rápidas
-        self.cache_respostas = {
-            "oi": "Olá! Sou a Sofia, sua consultora do AppEstoicismo. O que você procura? 😊",
-            "olá": "Oi! Que bom te ver aqui! Sou a Sofia. Procura por algo específio?",
-            "help": "Estou aqui para te ajudar a tomar a melhor decisão! Qual a sua dúvida?",
-            "preço": "O AppEstoicismo custa apenas R$ 19,90/mês com 79% OFF! Primeira semana grátis! 🎉"
-        }
-        
         # Estatísticas
         self.stats = {
             "total_conversas": 0,
@@ -270,18 +262,14 @@ LEMBRE-SE: Você está vendendo transformação de vida, não um aplicativo. Voc
         threading.Thread(target=salvar, daemon=True).start()
 
     def resposta_instantanea(self, mensagem):
-        """Resposta cache para velocidade"""
+        """Cache inteligente - preserva análise de níveis de consciência"""
         mensagem_lower = mensagem.lower().strip()
         
-        # Respostas em cache
-        for key in self.cache_respostas:
-            if key in mensagem_lower:
-                return self.cache_respostas[key], True
+        # Cache APENAS para perguntas diretas sobre preço/valor
+        if any(palavra in mensagem_lower for palavra in ["preço", "valor", "custa", "quanto"]):
+            return "O AppEstoicismo custa apenas R$ 19,90/mês com 79% OFF! Primeira semana grátis! 🎉", True
         
-        # Resposta genérica rápida
-        if len(mensagem_lower) < 10:
-            return "Oi! Me conte mais sobre isso...", False
-        
+        # Todas as outras mensagens vão para análise inteligente
         return None, False
 
     def detectar_intencao_compra(self, mensagem, resposta):
